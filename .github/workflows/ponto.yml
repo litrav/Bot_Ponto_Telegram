@@ -2,13 +2,26 @@ name: Bot Ponto SuperBid
 
 on:
   schedule:
-    # Segunda a Sexta (1-5)
-    - cron: '0 12 * * 1-5' # 09:00 BRT (Entrada)
-    - cron: '0 15 * * 1-5' # 12:00 BRT (Ida Almoço)
-    - cron: '0 16 * * 1-5' # 13:00 BRT (Volta Almoço)
-    - cron: '0 21 * * 1-5' # 18:00 BRT (Saída)
+    # --- HORÁRIOS (UTC) ---
+    # Brasil (BRT) = UTC - 3
+    
+    # 09:00 BRT = 12:00 UTC (Seg-Sex)
+    - cron: '0 12 * * 1-5'
+    
+    # 12:00 BRT = 15:00 UTC (Seg-Sex)
+    - cron: '0 15 * * 1-5'
+    
+    # 13:00 BRT = 16:00 UTC (Seg-Sex)
+    - cron: '0 16 * * 1-5'
+    
+    # 16:00 BRT = 19:00 UTC (Seg-Sex)
+    - cron: '0 19 * * 1-5'
+    
+    # 21:00 BRT = 00:00 UTC (Dia Seguinte)
+    # ATENÇÃO: Roda Ter-Sáb (2-6) para corresponder a Seg-Sex no Brasil
+    - cron: '0 0 * * 2-6' 
   
-  # Botão pra rodar manual quando quiser testar
+  # Botão manual pra testes
   workflow_dispatch:
 
 jobs:
@@ -16,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Baixar código do repositório
+      - name: Baixar código
         uses: actions/checkout@v3
 
       - name: Configurar Python
@@ -24,28 +37,39 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Instalar dependências
+      
+      - name: Instalar Requests
         run: pip install requests
 
-      - name: Verificar Horário e Enviar
+      - name: Verificar Hora e Disparar
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          # Pega a hora atual do servidor (UTC)
-          HORA=$(date +%H)
+          # Pega a hora atual do servidor (UTC) e remove zeros à esquerda pra não dar erro matemático
+          HORA=$(date +%-H)
+          
           echo "Hora atual no servidor (UTC): $HORA"
 
-          # Lógica de Decisão
+          # --- LÓGICA DE DECISÃO ---
+          
           if [ "$HORA" -eq 12 ]; then
             python bot.py entrada
+            
           elif [ "$HORA" -eq 15 ]; then
             python bot.py almoco_ida
+            
           elif [ "$HORA" -eq 16 ]; then
             python bot.py almoco_volta
-          elif [ "$HORA" -eq 21 ]; then
+            
+          elif [ "$HORA" -eq 19 ]; then
             python bot.py saida
+            
+          # Se for 00h (Meia-noite UTC = 21h Brasil)
+          elif [ "$HORA" -eq 0 ]; then
+            python bot.py hora_extra
+            
           else
-            echo "Rodando fora do horário agendado (Teste Manual)"
+            echo "Horário fora do agendamento (Teste Manual)"
             python bot.py geral
           fi
