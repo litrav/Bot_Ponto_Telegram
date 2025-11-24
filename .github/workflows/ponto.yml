@@ -1,6 +1,6 @@
 name: Bot Ponto SuperBid
 
-on:
+off:
   schedule:
     # --- HORÁRIOS (UTC) ---
     # Brasil (BRT) = UTC - 3
