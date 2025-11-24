@@ -1,6 +1,6 @@
-# 🤖 Bot Fiscal de Ponto - SuperBid
+# 🤖 Bot Fiscal de Ponto
 
-> "Código bom é código commitado, mas código pago é código com ponto batido!" 💸
+
 
 Este projeto é um bot automatizado que envia lembretes diários no grupo do Telegram da equipe para garantir que ninguém esqueça de registrar o ponto (entrada, almoço, volta e saída).
 
@@ -57,4 +57,5 @@ Para rodar este bot no seu próprio repositório:
 * [Telegram API](https://core.telegram.org/bots/api)
 
 ---
+
 *Feito com ☕ e Python.*
