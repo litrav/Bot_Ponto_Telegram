@@ -16,7 +16,7 @@ tipo = sys.argv[1] if len(sys.argv) > 1 else "geral"
 def enviar_mensagem():
     # --- DICIONÁRIO DE MENSAGENS ---
     if tipo == "entrada":
-        msg = "☀️ *Bom dia, Time SuperBid!* \n\n☕ 09h! Já bateu o ponto de entrada? Bora codar!"
+        msg = "☀️ *Bom dia, Time SuperBid!* \n\n☕ 09h! Já bateu o ponto de entrada? Bora meu fi!"
     
     elif tipo == "almoco_ida":
         msg = "🍽️ *Hora do Almoço!* \n\n😋 12h! Pausa pro rango. Bate o ponto e bom apetite!"
